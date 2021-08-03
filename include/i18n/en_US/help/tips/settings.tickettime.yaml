@@ -46,3 +46,10 @@ thread_billdefault:
     content: >
         Enable this option to make time billable as default.
         
+
+thread_billhidden:
+    title: Hide Billing from Staff
+    content: >
+        Enable this option to hide the bill tick box from staff.<br />
+        This allows you to force all time to be billed as staff cannot untick the box.
+        

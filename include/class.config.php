@@ -249,6 +249,7 @@ class OsticketConfig extends Config {
         'isthreadtimer' => 0,
         'isthreadbill' => 0,
         'isthreadbilldefault' => 0,
+		'isthreadbillhidden' => 0,
         'ticket_lock' => 2, // Lock on activity
         'max_open_tickets' => 0,
         'files_req_auth' => 1,
@@ -323,6 +324,11 @@ class OsticketConfig extends Config {
     function isThreadBillDefault() {
         // determines if Ticket Thread Bill is Default
         return ($this->get('isthreadbilldefault'));
+    }
+	
+	function isThreadBillHidden() {
+        // determines if Ticket Thread Bill is Hidden
+        return ($this->get('isthreadbillhidden'));
     }
 
     function isCannedResponseEnabled() {
@@ -1740,6 +1746,7 @@ class OsticketConfig extends Config {
             'isthreadtimer'=>isset($vars['isthreadtimer'])?1:0,
             'isthreadbill'=>isset($vars['isthreadbill'])?1:0,
             'isthreadbilldefault'=>isset($vars['isthreadbilldefault'])?1:0,
+			'isthreadbillhidden'=>isset($vars['isthreadbillhidden'])?1:0,
         ));
     }
 

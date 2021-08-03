@@ -1172,7 +1172,11 @@ if ($errors['err'] && isset($_POST['a'])) {
 <?php               } ?>
                     </select>
                     <?php if ($cfg->isThreadBill()) { ?>
-                        &nbsp;&nbsp;<input type="checkbox" name="time_bill" value="1" <?php if ($cfg->isThreadBillDefault()) { echo 'checked=checked'; } ?>/> Billable?
+						<?php if ($cfg->isThreadBillDefault() && $cfg->isThreadBillHidden()) { ?>
+							<input type="hidden" name="time_bill" value="1" />
+						<?php } else { ?>
+							&nbsp;&nbsp;<input type="checkbox" name="time_bill" value="1" <?php if ($cfg->isThreadBillDefault()) { echo 'checked=checked'; } ?>/> Billable?
+						<? } ?>
                     <?php } ?>
                 </td>
             </tr>
@@ -1309,7 +1313,11 @@ if ($errors['err'] && isset($_POST['a'])) {
 <?php               } ?>
                     </select>
                     <?php if ($cfg->isThreadBill()) { ?>
-                        &nbsp;&nbsp;<input type="checkbox" name="time_bill" value="1" <?php if ($cfg->isThreadBillDefault()) { echo 'checked=checked'; } ?>/> Billable?
+						<?php if ($cfg->isThreadBillDefault() && $cfg->isThreadBillHidden()) { ?>
+							<input type="hidden" name="time_bill" value="1" />
+						<?php } else { ?>
+							&nbsp;&nbsp;<input type="checkbox" name="time_bill" value="1" <?php if ($cfg->isThreadBillDefault()) { echo 'checked=checked'; } ?>/> Billable?
+						<? } ?>
                     <?php } ?>
                 </td>
             </tr>

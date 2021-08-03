@@ -68,6 +68,15 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
                 <i class="help-tip icon-question-sign" href="#thread_billdefault"></i>
             </td>
         </tr>
+		<tr>
+            <td width="180"><?php echo __('Hide Billing from Staff');?>:</td>
+            <td>
+                <input type="checkbox" name="isthreadbillhidden" value="1" <?php echo $config['isthreadbillhidden']?'checked="checked"':''; ?> >
+                <?php echo __('Hide Billing Tick Box from Staff'); ?>
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['isthreadbillhidden']; ?></font>
+                <i class="help-tip icon-question-sign" href="#thread_billhidden"></i>
+            </td>
+        </tr>
     </tbody>
 </table>
 <p style="padding-left:210px;">
