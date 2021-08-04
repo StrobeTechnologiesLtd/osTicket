@@ -210,6 +210,9 @@ JS
             'title' => Format::htmlchars($_POST['title']),
             'body' => $new,
             'ip_address' => $_SERVER['REMOTE_ADDR'],
+			'time_spent' => $_POST['time_spent_edit'],
+			'time_type' => $_POST['time_type'],
+			'time_bill' => $_POST['time_bill'],
         ));
 
         if (!$entry)
