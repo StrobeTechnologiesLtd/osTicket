@@ -38,6 +38,53 @@
         (string) $this->entry->getBody()));
 ?></textarea>
 
+<?php if ($cfg->isThreadTime()) { ?>
+<div class="full-width">
+	<table style="width:100%" border="0" cellspacing="0" cellpadding="3">
+	<tbody>
+		<tr>
+			<td width="120">
+				<label><strong><?php echo __('Time Spent');?>:</strong></label>
+			</td>
+			<td>
+				<?php
+				if ($errors['time_spent'])
+					echo sprintf('<div class="error">%s</div>',$errors['time_spent']);
+				?>
+				<input type="text" id="time_spent_edit" name="time_spent_edit" size="5"
+				value="<?php echo $this->entry->time_spent;?>" />
+				(Minutes)
+			</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="time_type"><strong>Time Type:</strong></label>
+				</td>
+				<td>
+					<?php
+					if ($errors['time_type'])
+						echo sprintf('<div class="error">%s</div>',$errors['time_type']);
+					?>
+					<select id="time_type" name="time_type">
+						<?php
+						$list = DynamicList::lookup(['type' => 'time-type']);
+						foreach ($list->getAllItems() as $item) { ?>
+							<option value="<?php echo $item->getId(); ?>"
+							<?php if ($this->entry->time_type == $item->getId()) echo "selected"; ?>
+							><?php echo $item->getValue(); ?></option>
+<?php              		} ?>
+					</select>
+					<?php if ($cfg->isThreadBill()) { ?>
+						&nbsp;&nbsp;<input type="checkbox" name="time_bill" value="1" <?php if ($this->entry->time_bill == 1) { echo 'checked=checked'; } ?>/> Billable?
+					<?php } ?>
+				</td>
+			</tr>
+		</tbody>
+		</table>
+</div>
+<?php } ?>
+
+
 <?php if ($this->entry->type == 'R') { ?>
 <div style="margin:10px 0;"><strong><?php echo __('Signature'); ?>:</strong>
     <label><input type="radio" name="signature" value="none" checked="checked"> <?php echo __('None');?></label>
