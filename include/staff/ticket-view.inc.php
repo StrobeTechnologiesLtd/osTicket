@@ -1141,7 +1141,7 @@ if ($errors['err'] && isset($_POST['a'])) {
                 if ($errors['time_spent'])
                     echo sprintf('<div class="error">%s</div>',$errors['time_spent']);
 				?>
-				<input type="text" id="time_spent" name="time_spent" size="5"
+				<input type="text" id="time_spent" name="time_spent" size="5" onChange="timeChange(this)"
                     value="<?php if(isset($_POST['time_spent'])) echo $_POST['time_spent'];?>" />
                     (Minutes)
                     <?php if ($cfg->isThreadTimer()) { ?>
@@ -1176,7 +1176,9 @@ if ($errors['err'] && isset($_POST['a'])) {
                     <?php } ?>
                 </td>
             </tr>
-            <?php }} ?>
+            <?php } else { ?>
+				<input type="hidden" name="time_type" value="0">
+			<?php } } ?>
          </tbody>
         </table>
         <p  style="text-align:center;">
@@ -1278,7 +1280,7 @@ if ($errors['err'] && isset($_POST['a'])) {
                 if ($errors['time_spent'])
                     echo sprintf('<div class="error">%s</div>',$errors['time_spent']);
 				?>
-                    <input type="text" id="time_spent" name="time_spent" size="5"
+                    <input type="text" id="time_spent" name="time_spent" size="5" onChange="timeChange(this)"
                     value="<?php if(isset($_POST['time_spent'])) echo $_POST['time_spent'];?>" />
                     (Minutes)
                     <?php if ($cfg->isThreadTimer()) { ?>
@@ -1313,7 +1315,9 @@ if ($errors['err'] && isset($_POST['a'])) {
                     <?php } ?>
                 </td>
             </tr>
-            <?php }} ?>
+            <?php } else { ?>
+				<input type="hidden" name="time_type" value="0">
+			<?php } } ?>
         </table>
 
        <p style="text-align:center;">
@@ -1569,6 +1573,13 @@ var incTime = function () {
 };
 // set up the callback
 setInterval(incTime, interval);
+
+function timeChange(obj) {
+	// user has entered a time manually
+	timeSpent = parseInt(obj.value);
+	timerStart = new Date();
+	$('.startTime').html("Time updated at "+timerStart);
+}
 
 // button click functions
 $('i.icon-undo').click(function() {
