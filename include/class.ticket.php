@@ -543,10 +543,13 @@ implements RestrictedAccess, Threadable, Searchable {
         return self::formatTime($totals);
     }
 
-    static function formatTime($time) {
+    static function formatTime($time, $short=false) {
         $hours = floor($time / 60);
         $minutes = $time % 60;
         $formatted = '';
+
+		// short format - Hours:minutes
+		if ($short) return sprintf("%d:%02d", $hours, $minutes);
 
         if ($hours > 0) {
             $formatted .= sprintf('%d %s', $hours, _N('Hour', 'Hours', $hours));

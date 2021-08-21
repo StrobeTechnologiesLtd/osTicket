@@ -135,6 +135,11 @@ foreach ($groups as $g=>$desc) {
                 <i class="help-tip icon-question-sign" href="#deleted"></i>
               <?php
               break;
+            case 'Ticket Time':
+              ?>
+                <i class="help-tip icon-question-sign" href="#ticket_time"></i>
+              <?php
+              break;
             case 'Service Time':
               ?>
                 <i class="help-tip icon-question-sign" href="#service_time"></i>
