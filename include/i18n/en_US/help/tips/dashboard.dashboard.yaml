@@ -78,6 +78,12 @@ deleted:
     content: >
         The amount of tickets that have been deleted.
 
+ticket_time:
+    title: Ticket Time
+    content: >
+        Refers to the duration of time spent on a ticket (including all Time Types)
+        Represented as hours:minutes
+
 service_time:
     title: Service Time
     content: >

@@ -134,6 +134,7 @@ class OverviewReport {
 
     function enumTabularGroups() {
         return array("dept"=>__("Department"), "topic"=>__("Topics"),
+			"org" =>__("Organisation"),
             # XXX: This will be relative to permissions based on the
             # logged-in-staff. For basic staff, this will be 'My Stats'
             "staff"=>__("Agent"));
@@ -147,7 +148,7 @@ class OverviewReport {
             return $event_ids[$name];
         };
         $dash_headers = array(__('Opened'),__('Assigned'),__('Overdue'),__('Closed'),__('Reopened'),
-                              __('Deleted'),__('Service Time'),__('Response Time'));
+                              __('Deleted'),__('Ticket Time'),__('Service Time'),__('Response Time'));
 
         list($start, $stop) = $this->getDateRange();
         $times = ThreadEvent::objects()
@@ -167,6 +168,7 @@ class OverviewReport {
                     'timestamp__range' => array($start, $stop, true),
                ))
             ->aggregate(array(
+				'TicketTime' => SqlAggregate::SUM('thread__entries__time_spent'),
                 'ServiceTime' => SqlAggregate::AVG(SqlFunction::timestampdiff(
                   new SqlCode('HOUR'), new SqlField('thread__events__timestamp'), new SqlField('timestamp'))
                 ),
@@ -209,6 +211,18 @@ class OverviewReport {
                 ));
 
         switch ($group) {
+		case 'org':
+            $headers = array(__('Organisation'));
+            $header = function($row) { return $row['thread__ticket__user__org__name']; };
+            $pk = 'thread__ticket__user__org__id';
+            $stats = $stats
+                ->values('thread__ticket__user__org__id', 'thread__ticket__user__org__name')
+				->distinct('thread__ticket__user__org__id');
+			$times = $times
+				->values('thread__ticket__user__org__id', 'thread__ticket__user__org__name')
+				->distinct('thread__ticket__user__org__id');
+
+			break;
         case 'dept':
             $headers = array(__('Department'));
             $header = function($row) { return Dept::getLocalNameById($row['dept_id'], $row['dept__name']); };
@@ -291,9 +305,21 @@ class OverviewReport {
             $T = $timings[$R[$pk]];
             $rows[] = array($header($R) . $status, $R['Opened'], $R['Assigned'],
                 $R['Overdue'], $R['Closed'], $R['Reopened'], $R['Deleted'],
+				Ticket::formatTime($T['TicketTime'], true),
                 number_format($T['ServiceTime'], 1),
                 number_format($T['ResponseTime'], 1));
         }
+		// sort by time spent
+		usort($rows, function ($a, $b) {
+			list($h1,$m1)=explode(":", $a[7]);
+			list($h2,$m2)=explode(":", $b[7]);
+			if ($h1 < $h2)
+				return 1;
+			else if ($h1 == $h2) {
+				if ($m1 < $m2) return 1; else return -1;
+			}
+			else return -1;
+		});
         return array("columns" => array_merge($headers, $dash_headers),
                      "data" => $rows);
     }
