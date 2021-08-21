@@ -92,7 +92,7 @@ if(!$errors) {
     <h2><?php echo __('Time History / Detail'); ?></h2>
     <form action="timebill.php?id=<?php echo $ticket->getId() ?>&view=invoice" method="post" id="save">
     <?php csrf_token(); ?>
-    <table class="list" border="0" cellspacing="1" cellpadding="2" width="940">
+    <table class="list" border="0" cellspacing="1" cellpadding="2" >
         <tr>
             <th><?php echo __('Date'); ?></th>
             <th><?php echo __('Post Type'); ?></th>

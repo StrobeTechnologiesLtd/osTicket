@@ -67,7 +67,7 @@ if(!$errors) {
     <p>&nbsp;</p>
 
     <h2><?php echo __('Time History / Detail'); ?></h2>
-    <table class="list" border="0" cellspacing="1" cellpadding="2" width="940">
+    <table class="list" border="0" cellspacing="1" cellpadding="2" >
         <tr>
             <th><?php echo __('Date'); ?></th>
             <th><?php echo __('Post Type'); ?></th>

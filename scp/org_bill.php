@@ -90,7 +90,7 @@ require_once(STAFFINC_DIR.'header.inc.php');
 <b><?php echo __('Billing Period'); ?>:</b> <?php echo $_REQUEST['startdate']; ?> - <?php echo $_REQUEST['enddate']; ?><br /><br />
 <h2><?php echo __('Labour / Time Details'); ?></h2>
 <?php if (count($tickets)) { ?>
- <table class="list" border="0" cellspacing="1" cellpadding="2" width="940">
+ <table class="list" border="0" cellspacing="1" cellpadding="2" >
     <thead>
         <tr>
             <?php
