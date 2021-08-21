@@ -29,9 +29,13 @@ do {
         echo sprintf(__('Edited on %s by %s'), Format::datetime($E->updated),
             ($editor = $E->getEditor()) ? $editor->getName() : '');
     else
-        echo __('Original'); ?></em>
+        echo __('Original');
+		if ($E->time_spent >= 0) {
+			echo ' --- '. Ticket::formatTime($E->time_spent) .' - '. $E->getTimeTypeName();
+		}
+	?></em>
     </a>
-</dt>
+</dt>	
 <dd class="hidden" style="background-color:transparent">
     <div class="thread-body" style="background-color:transparent">
         <?php echo $E->getBody()->toHtml(); ?>
