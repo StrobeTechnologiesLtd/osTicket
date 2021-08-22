@@ -185,16 +185,27 @@ JS
     }
 
     function updateEntry($guard=false) {
-        global $thisstaff;
+        global $thisstaff, $cfg;
 
         $old = $this->entry;
         $new = ThreadEntryBody::fromFormattedText($_POST['body'], $old->format);
 
-        if ($new->getClean() == $old->getBody())
-            // No update was performed
+		$changed = false;
+		// check for edits of Thread Time
+		if ($cfg->isThreadTime()) {
+			if ($old->time_spent != $_POST['time_spent_edit'] ||
+				$old->time_type != $_POST['time_type'] ||
+				$old->time_bill != $_POST['time_bill'] ?? 0) {
+				$changed = true;
+			}
+		}
+		// changed if body text was changed
+        if (! $changed && $new->getClean() == $old->getBody()) {
             return $old;
+		}
 
-        $entry = ThreadEntry::create(array(
+		// build a new ThreadEntry based on the edited one
+		$new_te = array(
             // Copy most information from the old entry
             'poster' => $old->poster,
             'userId' => $old->user_id,
@@ -210,11 +221,18 @@ JS
             'title' => Format::htmlchars($_POST['title']),
             'body' => $new,
             'ip_address' => $_SERVER['REMOTE_ADDR'],
-			'time_spent' => $_POST['time_spent_edit'],
-			'time_type' => $_POST['time_type'],
-			'time_bill' => $_POST['time_bill'],
-        ));
+		);
 
+		// add editable fields for thread time recording
+		if ($cfg->isThreadTime()) {
+			$new_te = array_merge($new_te, array(
+				'time_spent' => $_POST['time_spent_edit'],
+				'time_type' => $_POST['time_type'],
+				'time_bill' => $_POST['time_bill'],
+				));
+		}
+
+        $entry = ThreadEntry::create($new_te);
         if (!$entry)
             return false;
 
