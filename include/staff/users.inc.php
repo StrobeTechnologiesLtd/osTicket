@@ -23,6 +23,7 @@ if ($_REQUEST['query']) {
 }
 
 $sortOptions = array('name' => 'name',
+		     'org' => 'org__name',
                      'email' => 'emails__address',
                      'status' => 'account__status',
                      'create' => 'created',
@@ -58,7 +59,7 @@ $qstr.='&amp;order='.($order=='-' ? 'ASC' : 'DESC');
 $_SESSION[':Q:users'] = $users;
 
 $users->values('id', 'name', 'default_email__address', 'account__id',
-    'account__status', 'created', 'updated');
+    'account__status', 'org__name', 'created', 'updated');
 $users->order_by($order . $order_column);
 ?>
 <div id="basic_search">
@@ -157,6 +158,8 @@ else
             <th nowrap width="4%">&nbsp;</th>
             <th><a <?php echo $name_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=name"><?php echo __('Name'); ?></a></th>
+            <th><a <?php echo $name_sort; ?> href="users.php?<?php
+                echo $qstr; ?>&sort=org"><?php echo __('Organization'); ?></a></th>
             <th width="22%"><a  <?php echo $status_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=status"><?php echo __('Status'); ?></a></th>
             <th width="20%"><a <?php echo $create_sort; ?> href="users.php?<?php
@@ -201,6 +204,7 @@ else
                              <small>(%d)</small>', $U['ticket_count']);
                     ?>
                 </td>
+		<td><?php echo $U['org__name']; ?></td>
                 <td><?php echo $status; ?></td>
                 <td><?php echo Format::date($U['created']); ?></td>
                 <td><?php echo Format::datetime($U['updated']); ?>&nbsp;</td>
