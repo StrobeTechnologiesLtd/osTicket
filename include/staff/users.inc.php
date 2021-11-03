@@ -24,6 +24,7 @@ if ($_REQUEST['query']) {
 
 $sortOptions = array('name' => 'name',
 		     'org' => 'org__name',
+		     'phone' => 'cdata__phone',
                      'email' => 'emails__address',
                      'status' => 'account__status',
                      'create' => 'created',
@@ -59,7 +60,7 @@ $qstr.='&amp;order='.($order=='-' ? 'ASC' : 'DESC');
 $_SESSION[':Q:users'] = $users;
 
 $users->values('id', 'name', 'default_email__address', 'account__id',
-    'account__status', 'org__name', 'created', 'updated');
+    'account__status', 'org__name', 'cdata__phone', 'created', 'updated');
 $users->order_by($order . $order_column);
 ?>
 <div id="basic_search">
@@ -156,15 +157,17 @@ else
     <thead>
         <tr>
             <th nowrap width="4%">&nbsp;</th>
-            <th><a <?php echo $name_sort; ?> href="users.php?<?php
+            <th width="170px"><a <?php echo $name_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=name"><?php echo __('Name'); ?></a></th>
-            <th><a <?php echo $name_sort; ?> href="users.php?<?php
+            <th width="30%"><a href="users.php?<?php
                 echo $qstr; ?>&sort=org"><?php echo __('Organization'); ?></a></th>
-            <th width="22%"><a  <?php echo $status_sort; ?> href="users.php?<?php
+            <th><a href="users.php?<?php
+                echo $qstr; ?>&sort=phone"><?php echo __('Phone Number'); ?></a></th>
+            <th><a  <?php echo $status_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=status"><?php echo __('Status'); ?></a></th>
-            <th width="20%"><a <?php echo $create_sort; ?> href="users.php?<?php
+            <th><a <?php echo $create_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=create"><?php echo __('Created'); ?></a></th>
-            <th width="20%"><a <?php echo $update_sort; ?> href="users.php?<?php
+            <th width="125px"><a <?php echo $update_sort; ?> href="users.php?<?php
                 echo $qstr; ?>&sort=update"><?php echo __('Updated'); ?></a></th>
         </tr>
     </thead>
@@ -205,6 +208,7 @@ else
                     ?>
                 </td>
 		<td><?php echo $U['org__name']; ?></td>
+		<td><?php if(strlen($U['cdata__phone'])>0) echo '<a href="tel:'.$U['cdata__phone'].'">'.$U['cdata__phone'].'</a>'; ?></td>
                 <td><?php echo $status; ?></td>
                 <td><?php echo Format::date($U['created']); ?></td>
                 <td><?php echo Format::datetime($U['updated']); ?>&nbsp;</td>
