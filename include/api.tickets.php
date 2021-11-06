@@ -343,11 +343,15 @@ class TicketApiController extends ApiController {
 		$org = $ticket->getOwner()->getOrganization();
 		if (isset($org))
 			$output['organisation'] = $org->getName();
+        else
+            $output['warnings'][] = "no org for ticket owner";
 
 		// Ticket may not be assigned, but we can bypass this by going
 		// directly to the Staff member associated with the ticket
 		if ($ticket->getStaff())
 			$output['assignee'] = $ticket->getStaff()->getName()->getFull();
+        else
+            $output['warnings'][] = "ticket not assigned";
 
 		$output['created'] = $ticket->getCreateDate();
 		$output['updated'] = $ticket->getUpdateDate();
@@ -360,17 +364,12 @@ class TicketApiController extends ApiController {
 		if ($cfg->isThreadTime()) {
 			// add total time by time_type
 			$times = $ticket->getTimeTotalsByType(false);
-			foreach ($times as $t => $time) {
-				if ($t == 0) continue;
-				$type = DynamicListItem::lookup($t);
-				if ($type)
-					$output['times'][$type->value] = $time;
-				else
-					$output['times'][$t] = $time;
-			}
-
+            $output['times'] = $times;
 			$output['total_time_spent'] = $ticket->getTimeSpent();
 		}
+        else {
+            $output['warnings'][] = "thread time not enabled";
+        }
 
 //		$output['raw'] = serialize($ticket);
 
