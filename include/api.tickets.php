@@ -371,8 +371,6 @@ class TicketApiController extends ApiController {
             $output['warnings'][] = "thread time not enabled";
         }
 
-//		$output['raw'] = serialize($ticket);
-
         return $output;
 	}
 	/*
@@ -406,6 +404,9 @@ class TicketApiController extends ApiController {
 	 */
 	function ticketStatuses()
 	{
+        if(!($key=$this->requireApiKey()))
+            return $this->exerr(401, __('API key not authorized'));
+
 		$tsl = TicketStatusList::getStatuses(array('states' => array("open", "closed")));
 		foreach ($tsl as $ts) {
 			$k = $ts->getName();
