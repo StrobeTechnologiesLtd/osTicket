@@ -546,10 +546,13 @@ implements RestrictedAccess, Threadable, Searchable {
         return self::formatTime($totals);
     }
 
-    static function formatTime($time) {
+    static function formatTime($time, $short=false) {
         $hours = floor($time / 60);
         $minutes = $time % 60;
         $formatted = '';
+
+		// short format - Hours:minutes
+		if ($short) return sprintf("%d:%02d", $hours, $minutes);
 
         if ($hours > 0) {
             $formatted .= sprintf('%d %s', $hours, _N('Hour', 'Hours', $hours));
@@ -573,8 +576,15 @@ implements RestrictedAccess, Threadable, Searchable {
             $times = $times->filter(['thread__entries__time_bill' => 1]);
 
         $totals = array();
+		// decode time_type to text value
         foreach ($times as $T) {
-            $totals[$T['thread__entries__time_type']] = $T['totaltime'];
+			$ttype = $T['thread__entries__time_type'];
+			if ($ttype == 0 || $T['totaltime'] == 0) 
+				continue;
+			else {
+				$type = DynamicListItem::lookup($ttype)->value;
+			}
+            $totals[$type] = $T['totaltime'];
         }
         return $totals;
     }
