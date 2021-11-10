@@ -33,6 +33,7 @@ $dispatcher = patterns('',
 		url_get("^/ticket/(?P<id>\d+)$", array('api.tickets.php:TicketApiController','getTicket')),
 		url_get("^/ticket/(?P<id>\d+)/thread$", array('api.tickets.php:TicketApiController','getTicketThread')),
 		url_get("^/ticket/statuses$", array('api.tickets.php:TicketApiController','ticketStatuses')),
+        url_get("^/departments$", array('api.department.php:DepartmentApiController', 'listDepartments')),
 
 		// Updates (PUT)
 		// set ticket status (in parameters)
