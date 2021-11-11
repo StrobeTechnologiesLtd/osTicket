@@ -51,7 +51,7 @@ class TicketTimeApiController extends ApiController {
 		// pull the threads and update them
 		$threads = $ticket->getThreadEntries();
 		foreach ($threads as $te) {
-			if ($te->getTimeTypeName() === $timeType) {
+			if ($timeType === "any" || $te->getTimeTypeName() === $timeType) {
 				$te->setTimeInvoice(true);
 				$te->save();
 			}

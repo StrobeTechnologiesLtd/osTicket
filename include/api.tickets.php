@@ -215,6 +215,25 @@ class TicketApiController extends ApiController {
 
 		// Get passed data from GET or POST request
 		$request = $this->getRequest(null);
+
+        $query = Ticket::objects()
+                        ->values("ticket_id", "number");
+        foreach ($request as $key => $val) {
+            switch ($key) {
+                case "status":
+                    $query->filter([ "status__name" => $val ]);
+                    break;
+                case "department":
+                    $query->filter([ "dept__name" => $val ]);
+                    break;
+            }
+        }
+        if (! array_key_exists("status", $request))
+            $query->filter([ "status__state" => "open" ]);
+
+        $tickets = $query->all();
+        $this->response(200, str_replace("ticket_id", "id", json_encode($tickets)));
+/*
 		if (isset($request['status'])) {
 			$tickets = Ticket::objects()
 							->values("ticket_id", "number")
@@ -224,6 +243,7 @@ class TicketApiController extends ApiController {
 			// know now to do column aliases in their ORM
 			$this->response(200, str_replace("ticket_id", "id", json_encode($tickets)));
 		}
+*/
 	}
 
 	/*
@@ -341,7 +361,7 @@ class TicketApiController extends ApiController {
 
 		// Owner may not belong to an organisation
 		$org = $ticket->getOwner()->getOrganization();
-		if (isset($org))
+		if ($org)
 			$output['organisation'] = $org->getName();
         else
             $output['warnings'][] = "no org for ticket owner";
