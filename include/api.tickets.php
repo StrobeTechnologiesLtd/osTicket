@@ -217,7 +217,7 @@ class TicketApiController extends ApiController {
 		$request = $this->getRequest(null);
 
         $query = Ticket::objects()
-                        ->values("ticket_id", "number");
+            ->filter(["ticket_pid" => null]);
         foreach ($request as $key => $val) {
             switch ($key) {
                 case "status":
@@ -226,24 +226,20 @@ class TicketApiController extends ApiController {
                 case "department":
                     $query->filter([ "dept__name" => $val ]);
                     break;
-            }
+           }
         }
         if (! array_key_exists("status", $request))
             $query->filter([ "status__state" => "open" ]);
 
         $tickets = $query->all();
-        $this->response(200, str_replace("ticket_id", "id", json_encode($tickets)));
-/*
-		if (isset($request['status'])) {
-			$tickets = Ticket::objects()
-							->values("ticket_id", "number")
-							->filter([ "status__name__like" => $request['status'] ])
-							->all();
-			// we actually want to return 'id' instead of 'ticket_id', so this is an easy hack given I don't
-			// know now to do column aliases in their ORM
-			$this->response(200, str_replace("ticket_id", "id", json_encode($tickets)));
-		}
-*/
+        $res = array();
+        foreach ($tickets as $t) {
+            $res[] = [  "id" => $t->ticket_id,
+                        "number" => $t->number,
+                        "lastupdate" => $t->getLastResponseDate(),
+                        "lastmsg" => $t->getLastMessageDate() ];
+        }
+        $this->response(200, json_encode($res));
 	}
 
 	/*
@@ -358,6 +354,7 @@ class TicketApiController extends ApiController {
 		$output['name'] = $ticket->getName()->getFull();
 		$output['subject'] = $ticket->getSubject();
 		$output['owner'] = $ticket->getOwner()->getName()->getFull();
+        $output['lastupdate'] = $ticket->getLastResponseDate();
 
 		// Owner may not belong to an organisation
 		$org = $ticket->getOwner()->getOrganization();
