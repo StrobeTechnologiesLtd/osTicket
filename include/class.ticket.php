@@ -567,6 +567,7 @@ implements RestrictedAccess, Threadable, Searchable {
     function getTimeTotalsByType($billable=true, $typeid=false) {
         $times = Ticket::objects()
             ->filter(['ticket_id' => $this->getId()])
+			->exclude(array('thread__entries__flags__hasbit' => ThreadEntry::FLAG_HIDDEN | ThreadEntry::FLAG_GUARDED))
             ->values('thread__entries__time_type', 'totaltime')
             ->annotate(['totaltime' => SqlAggregate::SUM('thread__entries__time_spent')]);
 
