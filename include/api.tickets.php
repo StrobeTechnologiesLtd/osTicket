@@ -398,21 +398,22 @@ class TicketApiController extends ApiController {
 		global $cfg;
 		$output = array();
 		foreach ($ticket->getThreadEntries() as $th) {
-			$thread = array();
-			$thread['id'] = $th->id;
-			$thread['title'] = $th->getTitle();
-			$thread['type_name'] = $th->getTypeName();
-			$thread['poster'] = $th->getPoster();
-			$thread['created'] = $th->getCreateDate();
-			if ($cfg->isThreadTime()) {
-				$thread['time_spent'] = $th->getTimeSpent();
-				$thread['time_bill'] = $th->getTimeBill();
-				$thread['time_invoice'] = $th->getTimeInvoice();
-				$thread['time_type'] = $th->getTimeTypeName();
+			if (! ($th->flags & ThreadEntry::FLAG_HIDDEN)) {
+				$thread = array();
+				$thread['id'] = $th->id;
+				$thread['title'] = $th->getTitle();
+				$thread['type_name'] = $th->getTypeName();
+				$thread['poster'] = $th->getPoster();
+				$thread['created'] = $th->getCreateDate();
+				if ($cfg->isThreadTime()) {
+					$thread['time_spent'] = $th->getTimeSpent();
+					$thread['time_bill'] = $th->getTimeBill();
+					$thread['time_invoice'] = $th->getTimeInvoice();
+					$thread['time_type'] = $th->getTimeTypeName();
+				}
+				$thread['body'] = $th->getBody()->getClean();
+				$output[$th->getId()] = $thread;
 			}
-			$thread['body'] = $th->getBody()->getClean();
-//			$thread['raw'] = json_encode($th);
-			$output[$th->getId()] = $thread;
 		}
 		return $output;
 	}
